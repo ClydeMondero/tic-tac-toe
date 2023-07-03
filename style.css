@@ -1,0 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.gameboard-container {
+  width: 250px;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+}
