@@ -7,32 +7,31 @@
 
 //* GameBoard module
 const gameBoard = (() => {
-  let board = [
-    ["X", "X", "O"],
-    ["O", "O", "X"],
-    ["X", "O", "X"],
-  ];
+  let board = ["", "", "", "", "", "", "", "", ""];
+  const cells = document.querySelectorAll(".cell");
+
+  //* Inserts the player marker to the index of board
+  const playerTurn = () => {
+    cells.forEach((cell, index) => {
+      cell.addEventListener(
+        "click",
+        () => {
+          board[index] = "X";
+          displayBoard();
+        },
+        { once: true }
+      );
+    });
+  };
 
   //* Displays the cells of the array to the DOM
   const displayBoard = () => {
-    const boardContainer = document.querySelector(".gameboard-container");
-
-    for (let row of board) {
-      for (let column of row) {
-        const cell = document.createElement("div");
-        cell.textContent = column;
-
-        boardContainer.appendChild(cell);
-      }
-    }
+    cells.forEach((cell, index) => {
+      cell.textContent = board[index];
+    });
   };
 
-  return { displayBoard };
+  return { playerTurn };
 })();
 
-//* Controls the display of `UI
-const displayController = (() => {
-  gameBoard.displayBoard();
-})();
-
-displayController();
+gameBoard.playerTurn();

@@ -4,9 +4,20 @@
 }
 
 .gameboard-container {
-  width: 250px;
   display: grid;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
   justify-items: center;
   align-items: center;
+}
+
+.cell {
+  width: 150px;
+  height: 150px;
+  font-size: 5rem;
+  background-color: lightgray;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
