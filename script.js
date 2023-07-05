@@ -5,33 +5,72 @@
     3. First to line up 3 cells wins (horizontally, vertically, diagonally)
 */
 
-//* GameBoard module
+//* GameBoard Module
 const gameBoard = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
-  const cells = document.querySelectorAll(".cell");
 
-  //* Inserts the player marker to the index of board
-  const playerTurn = () => {
+  const getBoard = () => board; //returns the board array
+
+  const addMarker = (marker, index) => (board[index] = marker); //adds the marker to the array
+
+  return { getBoard, addMarker };
+})();
+
+//* Player Factory
+const Player = (name, marker) => {
+  return { name, marker };
+};
+
+const gameController = (() => {
+  const playerOne = Player("Clyde", "X");
+  const playerTwo = Player("Computer", "O");
+
+  let activePlayer = playerOne;
+
+  const getActivePlayer = () => activePlayer;
+
+  const switchPlayer = () => {
+    activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
+  };
+
+  const playRound = (player, index) => {
+    gameBoard.addMarker(player.marker, index);
+    switchPlayer();
+  };
+
+  return { getActivePlayer, playRound };
+})();
+
+//* DisplayController Module
+const displayController = (() => {
+  const cells = document.querySelectorAll(".cell");
+  const board = gameBoard.getBoard();
+
+  const updateBoard = () => {
+    cells.forEach((cell, index) => {
+      cell.textContent = board[index];
+    });
+  };
+
+  const clickHandler = () => {
     cells.forEach((cell, index) => {
       cell.addEventListener(
         "click",
         () => {
-          board[index] = "X";
-          displayBoard();
+          gameController.playRound(gameController.getActivePlayer(), index);
+
+          updateBoard();
         },
         { once: true }
       );
     });
   };
 
-  //* Displays the cells of the array to the DOM
-  const displayBoard = () => {
-    cells.forEach((cell, index) => {
-      cell.textContent = board[index];
-    });
-  };
-
-  return { playerTurn };
+  return { clickHandler };
 })();
 
-gameBoard.playerTurn();
+function game() {
+  displayController.clickHandler();
+}
+
+game();

@@ -3,21 +3,30 @@
   padding: 0;
 }
 
-.gameboard-container {
-  display: grid;
-  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  justify-items: center;
-  align-items: center;
-}
-
-.cell {
-  width: 150px;
-  height: 150px;
-  font-size: 5rem;
+.container {
+  width: 100vw;
+  height: 100vh;
   background-color: lightgray;
-  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+}
+
+.gameBoard {
+  width: 500px;
+  height: 500px;
+  background-color: black;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  gap: 5px;
+  border: 5px solid black;
+}
+
+.cell {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 6rem;
 }
