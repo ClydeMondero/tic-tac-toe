@@ -22,6 +22,7 @@ const Player = (name, marker) => {
 };
 
 const gameController = (() => {
+  const board = gameBoard.getBoard();
   const playerOne = Player("Clyde", "X");
   const playerTwo = Player("Computer", "O");
 
@@ -33,8 +34,49 @@ const gameController = (() => {
     activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
   };
 
+  const checkWinner = () => {
+    let winner = false;
+    //Vertically
+    for (let cell = 0; cell < 3; cell++) {
+      if (board[cell]) {
+        if (board[cell] == board[cell + 3] && board[cell] == board[cell + 6]) {
+          winner = true;
+          console.log(getActivePlayer().name + " wins!");
+        }
+      }
+    }
+
+    //Horizontally
+    for (let cell = 0; cell < 9; cell += 3) {
+      if (board[cell]) {
+        if (board[cell] == board[cell + 1] && board[cell] == board[cell + 2]) {
+          winner = true;
+          console.log(getActivePlayer().name + " wins!");
+        }
+      }
+    }
+
+    //Diagonally
+    let cell = 0;
+    if (board[cell]) {
+      if (board[cell] == board[cell + 4] && board[cell] == board[cell + 8]) {
+        winner = true;
+        console.log(getActivePlayer().name + " wins!");
+      }
+    }
+    cell = 2;
+    if (board[cell]) {
+      if (board[cell] == board[cell + 2] && board[cell] == board[cell + 4]) {
+        winner = true;
+        console.log(getActivePlayer().name + " wins!");
+      }
+    }
+  };
+
   const playRound = (player, index) => {
     gameBoard.addMarker(player.marker, index);
+
+    checkWinner();
     switchPlayer();
   };
 
@@ -46,7 +88,7 @@ const displayController = (() => {
   const cells = document.querySelectorAll(".cell");
   const board = gameBoard.getBoard();
 
-  const updateBoard = () => {
+  const updateDisplay = () => {
     cells.forEach((cell, index) => {
       cell.textContent = board[index];
     });
@@ -59,7 +101,7 @@ const displayController = (() => {
         () => {
           gameController.playRound(gameController.getActivePlayer(), index);
 
-          updateBoard();
+          updateDisplay();
         },
         { once: true }
       );
@@ -74,3 +116,9 @@ function game() {
 }
 
 game();
+
+//TODO: Reset board if board is full and there is still no winner
+//TODO: Display who's player's turn to mark
+//TODO: Player can enter his/her name
+//TODO: Display who wins
+//TODO: AI Enemy`
