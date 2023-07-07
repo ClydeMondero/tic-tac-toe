@@ -3,13 +3,27 @@
   padding: 0;
 }
 
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+}
+
 .container {
   width: 100vw;
   height: 100vh;
   background-color: lightgray;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20px;
+}
+
+.players {
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
 }
 
 .gameBoard {
@@ -29,4 +43,12 @@
   justify-content: center;
   align-items: center;
   font-size: 2rem;
+  font-family: "Lilita One", cursive;
+}
+
+.reset {
+  padding: 5px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

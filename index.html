@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odin - TicTacToe</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="container">
+      <div class="players">
+        <div class="player">Player 1: <span style="color: blue">X</span></div>
+        <div class="player">Player 2: <span style="color: red">O</span></div>
+      </div>
       <div class="gameBoard">
         <div class="cell"></div>
         <div class="cell"></div>
@@ -19,6 +29,8 @@
         <div class="cell"></div>
         <div class="cell"></div>
       </div>
+      <h2 class="information" style="color: blue">X's turn</h2>
+      <button class="reset">Reset</button>
     </div>
     <script src="script.js"></script>
   </body>

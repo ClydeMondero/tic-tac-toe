@@ -13,7 +13,24 @@ const gameBoard = (() => {
 
   const addMarker = (marker, index) => (board[index] = marker); //adds the marker to the array
 
-  return { getBoard, addMarker };
+  const resetBoard = () => {
+    for (let i = 0; i < board.length; i++) {
+      board[i] = "";
+    }
+  };
+
+  const isFull = () => {
+    let full = true;
+    board.forEach((cell) => {
+      if (cell == "") {
+        full = false;
+      }
+    });
+
+    return full;
+  };
+
+  return { getBoard, addMarker, resetBoard, isFull };
 })();
 
 //* Player Factory
@@ -23,10 +40,12 @@ const Player = (name, marker) => {
 
 const gameController = (() => {
   const board = gameBoard.getBoard();
-  const playerOne = Player("Clyde", "X");
-  const playerTwo = Player("Computer", "O");
+  const playerOne = Player("Player 1", "X");
+  const playerTwo = Player("Players 2", "O");
 
   let activePlayer = playerOne;
+
+  const resetActivePlayer = () => (activePlayer = playerOne);
 
   const getActivePlayer = () => activePlayer;
 
@@ -35,90 +54,147 @@ const gameController = (() => {
   };
 
   const checkWinner = () => {
-    let winner = false;
-    //Vertically
-    for (let cell = 0; cell < 3; cell++) {
-      if (board[cell]) {
-        if (board[cell] == board[cell + 3] && board[cell] == board[cell + 6]) {
-          winner = true;
-          console.log(getActivePlayer().name + " wins!");
+    let winner = "";
+
+    if (!gameBoard.isFull()) {
+      //Vertically
+      for (let cell = 0; cell < 3; cell++) {
+        if (board[cell]) {
+          if (
+            board[cell] == board[cell + 3] &&
+            board[cell] == board[cell + 6]
+          ) {
+            winner = board[cell];
+          }
         }
       }
-    }
 
-    //Horizontally
-    for (let cell = 0; cell < 9; cell += 3) {
-      if (board[cell]) {
-        if (board[cell] == board[cell + 1] && board[cell] == board[cell + 2]) {
-          winner = true;
-          console.log(getActivePlayer().name + " wins!");
+      //Horizontally
+      for (let cell = 0; cell < 9; cell += 3) {
+        if (board[cell]) {
+          if (
+            board[cell] == board[cell + 1] &&
+            board[cell] == board[cell + 2]
+          ) {
+            winner = board[cell];
+          }
         }
       }
+
+      //Diagonally
+      let cell = 0;
+      if (board[cell]) {
+        if (board[cell] == board[cell + 4] && board[cell] == board[cell + 8]) {
+          winner = board[cell];
+        }
+      }
+      cell = 2;
+      if (board[cell]) {
+        if (board[cell] == board[cell + 2] && board[cell] == board[cell + 4]) {
+          winner = board[cell];
+        }
+      }
+    } else {
+      winner = "Draw";
     }
 
-    //Diagonally
-    let cell = 0;
-    if (board[cell]) {
-      if (board[cell] == board[cell + 4] && board[cell] == board[cell + 8]) {
-        winner = true;
-        console.log(getActivePlayer().name + " wins!");
-      }
+    return winner;
+  };
+
+  const updateInformation = () => {
+    let info = "";
+
+    let winner = checkWinner();
+
+    if (winner == "X") {
+      info = "Player 1 wins!";
+    } else if (winner == "O") {
+      info = "Player 2 wins!";
+    } else if (winner == "Draw") {
+      info = "Draw!";
+    } else {
+      info = getActivePlayer().marker + "'s turn";
     }
-    cell = 2;
-    if (board[cell]) {
-      if (board[cell] == board[cell + 2] && board[cell] == board[cell + 4]) {
-        winner = true;
-        console.log(getActivePlayer().name + " wins!");
-      }
-    }
+
+    return info;
   };
 
   const playRound = (player, index) => {
     gameBoard.addMarker(player.marker, index);
 
-    checkWinner();
     switchPlayer();
   };
 
-  return { getActivePlayer, playRound };
+  return { getActivePlayer, playRound, updateInformation, resetActivePlayer };
 })();
 
 //* DisplayController Module
 const displayController = (() => {
   const cells = document.querySelectorAll(".cell");
   const board = gameBoard.getBoard();
+  const info = document.querySelector(".information");
 
   const updateDisplay = () => {
+    cells.forEach((cell) => {
+      cell.style.pointerEvents = "auto";
+    });
+
     cells.forEach((cell, index) => {
+      if (board[index] == "X") {
+        cell.style.color = "blue";
+      } else if (board[index] == "O") {
+        cell.style.color = "red";
+      }
+
       cell.textContent = board[index];
     });
+
+    setTimeout(() => {
+      if (info.textContent[0] == "X") {
+        info.style.color = "blue";
+      } else if (info.textContent[0] == "O") {
+        info.style.color = "red";
+      } else {
+        info.style.color = "black";
+
+        cells.forEach((cell) => {
+          cell.style.pointerEvents = "none";
+        });
+
+        setTimeout(resetGame, 3000);
+      }
+    }, 0);
+
+    info.textContent = gameController.updateInformation();
   };
 
-  const clickHandler = () => {
+  const cellClickHandler = () => {
     cells.forEach((cell, index) => {
-      cell.addEventListener(
-        "click",
-        () => {
+      cell.addEventListener("click", () => {
+        if (cell.textContent == "") {
           gameController.playRound(gameController.getActivePlayer(), index);
 
           updateDisplay();
-        },
-        { once: true }
-      );
+        }
+      });
     });
   };
 
-  return { clickHandler };
+  const resetGame = () => {
+    gameController.resetActivePlayer();
+    gameBoard.resetBoard();
+    updateDisplay();
+  };
+
+  const resetBtn = document.querySelector(".reset");
+
+  resetBtn.addEventListener("click", resetGame, { once: true });
+
+  return { cellClickHandler };
 })();
 
 function game() {
-  displayController.clickHandler();
+  displayController.cellClickHandler();
 }
 
 game();
-
-//TODO: Reset board if board is full and there is still no winner
-//TODO: Display who's player's turn to mark
-//TODO: Player can enter his/her name
-//TODO: Display who wins
-//TODO: AI Enemy`
