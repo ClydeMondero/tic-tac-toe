@@ -56,48 +56,40 @@ const gameController = (() => {
   const checkWinner = () => {
     let winner = "";
 
-    if (!gameBoard.isFull()) {
-      //Vertically
-      for (let cell = 0; cell < 3; cell++) {
-        if (board[cell]) {
-          if (
-            board[cell] == board[cell + 3] &&
-            board[cell] == board[cell + 6]
-          ) {
-            winner = board[cell];
-          }
-        }
-      }
-
-      //Horizontally
-      for (let cell = 0; cell < 9; cell += 3) {
-        if (board[cell]) {
-          if (
-            board[cell] == board[cell + 1] &&
-            board[cell] == board[cell + 2]
-          ) {
-            winner = board[cell];
-          }
-        }
-      }
-
-      //Diagonally
-      let cell = 0;
+    //Vertically
+    for (let cell = 0; cell < 3; cell++) {
       if (board[cell]) {
-        if (board[cell] == board[cell + 4] && board[cell] == board[cell + 8]) {
+        if (board[cell] == board[cell + 3] && board[cell] == board[cell + 6]) {
           winner = board[cell];
         }
       }
-      cell = 2;
+    }
+
+    //Horizontally
+    for (let cell = 0; cell < 9; cell += 3) {
       if (board[cell]) {
-        if (board[cell] == board[cell + 2] && board[cell] == board[cell + 4]) {
+        if (board[cell] == board[cell + 1] && board[cell] == board[cell + 2]) {
           winner = board[cell];
         }
       }
-    }else{
-        if(winner == ""){
-            winner = "Draw";
-        }
+    }
+
+    //Diagonally
+    let cell = 0;
+    if (board[cell]) {
+      if (board[cell] == board[cell + 4] && board[cell] == board[cell + 8]) {
+        winner = board[cell];
+      }
+    }
+    cell = 2;
+    if (board[cell]) {
+      if (board[cell] == board[cell + 2] && board[cell] == board[cell + 4]) {
+        winner = board[cell];
+      }
+    }
+
+    if (gameBoard.isFull() && winner == "") {
+      winner = "Draw";
     }
 
     return winner;
