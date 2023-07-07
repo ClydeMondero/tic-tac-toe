@@ -54,7 +54,7 @@ const gameController = (() => {
   };
 
   const checkWinner = () => {
-    let winner = "Draw";
+    let winner = "";
 
     if (!gameBoard.isFull()) {
       //Vertically
@@ -94,7 +94,11 @@ const gameController = (() => {
           winner = board[cell];
         }
       }
-    } 
+    }else{
+        if(winner == ""){
+            winner = "Draw";
+        }
+    }
 
     return winner;
   };
